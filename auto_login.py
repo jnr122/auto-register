@@ -1,5 +1,20 @@
 import requests
 
+# globals
+
+# nav links
+AIS_LOGIN_URL = "https://aisweb1.uvm.edu/pls/owa_prod/twbkwbis.P_ValLogin"
+AIS_MENU_URL = "https://aisweb1.uvm.edu/pls/owa_prod/twbkwbis.P_GenMenu?name=bmenu.P_StuMainMnu"
+AIS_TERM_SELECTION_URL = "https://aisweb1.uvm.edu/pls/owa_prod/bwskfreg.P_AltPin"
+
+MYUVM_LOGIN_URL = "https://myuvm.uvm.edu"
+# so I look like a browser
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+
+# user info
+LOGIN_TEXT = "login.txt"
+USERNAME, PASSWORD = "NULL", "NULL"
+
 def get(sess, url, headers):
     return sess.get(url, headers=headers)
 
@@ -24,13 +39,10 @@ def get_name_pass(url):
 # perform login with hidden tokens for myuvm page
 # no longer necessary, but maybe useful later
 def myuvm_login(sess, USERNAME, PASSWORD):
-    LOGIN_URL = "https://myuvm.uvm.edu"
-
-    result = get(sess, LOGIN_URL, dict(referer=LOGIN_URL))
+    result = get(sess, MYUVM_LOGIN_URL, dict(referer=MYUVM_LOGIN_URL))
 
     # login attempt purely to scrape secret tokens
-    login_result = get(sess, LOGIN_URL, dict(referer=LOGIN_URL))
-    LOGIN_URL = login_result.request.url
+    login_result = get(sess, MYUVM_LOGIN_URL, dict(referer=MYUVM_LOGIN_URL))
 
     # parse secret tokens
     str = (login_result.request.url.split("RT=")[1])
@@ -46,16 +58,12 @@ def myuvm_login(sess, USERNAME, PASSWORD):
     }
 
     # actual login attempt
-    login_result = post(sess, login_result.request.url, login_payload, dict(referer=LOGIN_URL))
+    login_result = post(sess, login_result.request.url, login_payload, dict(referer=MYUVM_LOGIN_URL))
 
     return login_result
 
 # skip directly to aisuvm iframe
 def aisuvm_login(sess, USERNAME, PASSWORD):
-    # nav links
-    LOGIN_URL = "https://aisweb1.uvm.edu/pls/owa_prod/twbkwbis.P_ValLogin"
-    MENU_URL = "https://aisweb1.uvm.edu/pls/owa_prod/twbkwbis.P_GenMenu?name=bmenu.P_StuMainMnu"
-    USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
 
     # setup payload
     login_payload = {
@@ -63,31 +71,25 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
         "PIN": PASSWORD
     }
 
-    # TODO: clean this up, get vs post methods
-    # so I look like a browser
-    login_headers = {'referer' : LOGIN_URL,'user-agent' : USER_AGENT }
-    menu_headers = {'referer' : MENU_URL, 'user-agent' : USER_AGENT}
-
     # update header dict with accepted submission format
-    result = post(sess, LOGIN_URL, login_payload, login_headers)
-
     # perform login, then get menu
-    result = post(sess, LOGIN_URL, login_payload, login_headers)
+    result = post(sess, AIS_LOGIN_URL, login_payload, {'referer' : AIS_LOGIN_URL,'user-agent' : USER_AGENT })
+    result = post(sess, AIS_LOGIN_URL, login_payload, {'referer' : AIS_LOGIN_URL, 'user-agent' : USER_AGENT})
+    result = get(sess, AIS_MENU_URL, {'referer' : AIS_MENU_URL, 'user-agent' : USER_AGENT})
 
-    result = get(sess, MENU_URL, headers=menu_headers)
     return result
-
 
 # set up get request
 def start_session(USERNAME, PASSWORD):
     with requests.session() as sess:
         login_result = aisuvm_login(sess, USERNAME, PASSWORD)
 
+        result = post(sess, AIS_TERM_SELECTION_URL, {"term_in" : 201909}, {'referer' : AIS_TERM_SELECTION_URL, 'user-agent' : USER_AGENT})
+
 
 def main():
-    LOGIN_TEXT = "login.txt"
+    global USER_NAME, PASSWORD
     USERNAME, PASSWORD = get_name_pass(LOGIN_TEXT)
-
     start_session(USERNAME, PASSWORD)
 
 if __name__ == '__main__':
