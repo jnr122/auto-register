@@ -1,7 +1,4 @@
 import requests
-from lxml import html
-from requests.exceptions import HTTPError
-from urllib.parse import parse_qsl
 
 # get password from textfile
 def get_name_pass(url):
@@ -15,13 +12,16 @@ def get_name_pass(url):
         return USERNAME, PASSWORD
 
     except:
-        return "NULL", "NULL"
+        print("Place username and password in adjacent login.txt file")
+        exit()
 
-# perform login
-def login(sess, LOGIN_URL, USERNAME, PASSWORD):
+# perform login with tokens for myuvm page
+# no longer necessary, but maybe useful later
+def myuvm_login(sess, USERNAME, PASSWORD):
+    LOGIN_URL = "https://myuvm.uvm.edu"
     result = sess.get(LOGIN_URL)
 
-    # login attempt purely to scrape secret tokensd
+    # login attempt purely to scrape secret tokens
     login_result = sess.get(LOGIN_URL, headers=dict(referer=LOGIN_URL))
     LOGIN_URL = login_result.request.url
 
@@ -40,58 +40,49 @@ def login(sess, LOGIN_URL, USERNAME, PASSWORD):
 
     # actual login attempt
     login_result = sess.post(login_result.request.url, data=login_payload, headers=dict(referer=LOGIN_URL))
+    return login_result
 
 
-# perform add/drop
-def add_drop(sess, USERNAME, PASSWORD):
-    ADD_DROP_URL = "https://aisweb1.uvm.edu/pls/owa_prod/bwskfreg.P_AddDropCrse"
-    # add_drop_page = sess.get(ADD_DROP_URL)
-    #login_result = sess.get(ADD_DROP_URL, headers=dict(referer=ADD_DROP_URL))
-
-    #sid = ... & PIN = ...
+# skip directly to aisuvm iframe
+def aisuvm_login(sess, USERNAME, PASSWORD):
+    LOGIN_URL = "https://aisweb1.uvm.edu/pls/owa_prod/twbkwbis.P_ValLogin"
+    MENU_URL = "https://aisweb1.uvm.edu/pls/owa_prod/twbkwbis.P_GenMenu?name=bmenu.P_StuMainMnu"
+    USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+    # setup payload
     login_payload = {
-        "sid": "asdf",
-        "PIN": "asdf"
+        "sid": USERNAME,
+        "PIN": PASSWORD
     }
 
-    header_payload = {'Date': 'Fri, 04 Oct 2019 14:23:11 GMT',
-         'Server': 'Oracle-Application-Server-11g',
-         'Content-Length': '6991',
-         'Set-Cookie': 'TESTID=set, SESSID=;expires=Mon, 01-Jan-1990 08:00:00 GMT, PROXY_HASH=;expires=Mon, 01-Jan-1990 08:00:00 GMT',
-         'Keep-Alive': 'timeout=15, max=99',
-         'Connection': 'Keep-Alive',
-         'Content-Type': 'text/html; charset=UTF-8',
-         'Content-Language': 'en',
-         'accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
+    # so I look like a browser
+    login_headers = {'referer' : LOGIN_URL,
+               'user-agent' : USER_AGENT
     }
 
-    #login_result = sess.post(ADD_DROP_URL, data=login_payload, headers=header_payload)
-    login_result = sess.get(ADD_DROP_URL, headers=dict(referer=ADD_DROP_URL))
+    menu_headers = {'referer' : MENU_URL,
+               'user-agent' : USER_AGENT
+    }
 
-    print(login_result.headers)
+    # TODO: clean this up, get vs post methods
+    # update header dict with accepted submission format
+    login_result = sess.post(LOGIN_URL, data=login_payload, headers = login_headers)
 
+    # perform login, then get menu
+    login_result = sess.post(LOGIN_URL, data=login_payload, headers=login_headers)
+    login_result = sess.get(MENU_URL, headers=menu_headers)
+
+    return login_result
 
 # set up get request
-def start_session(LOGIN_URL, USERNAME, PASSWORD):
-
+def start_session(USERNAME, PASSWORD):
     with requests.session() as sess:
-        login(sess, LOGIN_URL, USERNAME, PASSWORD)
-
-
-
-        #add_drop_page = sess.get(ADD_DROP_URL)
-        add_drop(sess, USERNAME, PASSWORD)
+        login_result = aisuvm_login(sess, USERNAME, PASSWORD)
 
 def main():
     LOGIN_TEXT = "login.txt"
     USERNAME, PASSWORD = get_name_pass(LOGIN_TEXT)
-    LOGIN_URL = "https://myuvm.uvm.edu"
-    # couldn't load username/ password
-    if USERNAME == "NULL" and PASSWORD == "NULL":
-        print("Failed to load password")
 
-    else:
-        start_session(LOGIN_URL, USERNAME, PASSWORD)
+    start_session(USERNAME, PASSWORD)
 
 if __name__ == '__main__':
     main()
