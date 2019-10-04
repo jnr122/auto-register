@@ -1,5 +1,11 @@
 import requests
 
+def get(sess, url, headers):
+    return sess.get(url, headers=headers)
+
+def post(sess, url, payload, headers):
+    return sess.post(url, payload, headers=headers)
+
 # get password from textfile
 def get_name_pass(url):
     try:
@@ -19,10 +25,11 @@ def get_name_pass(url):
 # no longer necessary, but maybe useful later
 def myuvm_login(sess, USERNAME, PASSWORD):
     LOGIN_URL = "https://myuvm.uvm.edu"
-    result = sess.get(LOGIN_URL)
+
+    result = get(sess, LOGIN_URL, dict(referer=LOGIN_URL))
 
     # login attempt purely to scrape secret tokens
-    login_result = sess.get(LOGIN_URL, headers=dict(referer=LOGIN_URL))
+    login_result = get(sess, LOGIN_URL, dict(referer=LOGIN_URL))
     LOGIN_URL = login_result.request.url
 
     # parse secret tokens
@@ -39,7 +46,8 @@ def myuvm_login(sess, USERNAME, PASSWORD):
     }
 
     # actual login attempt
-    login_result = sess.post(login_result.request.url, data=login_payload, headers=dict(referer=LOGIN_URL))
+    login_result = post(sess, login_result.request.url, login_payload, dict(referer=LOGIN_URL))
+
     return login_result
 
 # skip directly to aisuvm iframe
@@ -61,17 +69,20 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
     menu_headers = {'referer' : MENU_URL, 'user-agent' : USER_AGENT}
 
     # update header dict with accepted submission format
-    login_result = sess.post(LOGIN_URL, data=login_payload, headers=login_headers)
+    result = post(sess, LOGIN_URL, login_payload, login_headers)
 
     # perform login, then get menu
-    login_result = sess.post(LOGIN_URL, data=login_payload, headers=login_headers)
-    login_result = sess.get(MENU_URL, headers=menu_headers)
-    return login_result
+    result = post(sess, LOGIN_URL, login_payload, login_headers)
+
+    result = get(sess, MENU_URL, headers=menu_headers)
+    return result
+
 
 # set up get request
 def start_session(USERNAME, PASSWORD):
     with requests.session() as sess:
         login_result = aisuvm_login(sess, USERNAME, PASSWORD)
+
 
 def main():
     LOGIN_TEXT = "login.txt"
