@@ -3,10 +3,7 @@ import constants
 from lxml import html
 
 # user info
-LOGIN_TEXT = "login.txt"
-CLASSES_TEXT = "classes.txt"
 USERNAME, PASSWORD = "NULL", "NULL"
-
 CLASSES = []
 TERM = ""
 
@@ -84,19 +81,20 @@ def make_add_payload(result):
     s = "term_in=" + TERM + "&"
     s += constants.DUMMY
 
+    # existing crns
     tree = html.fromstring(result.text)
     crns = list(set(tree.xpath("//input[@name='CRN_IN']/@value")))
-
     crns.remove("DUMMY")
+
+    # loop through adding existing
     for crn in crns:
         s += "RSTS_IN=&UVM_REQ_WD_IND_IN=" + crn + "+N&assoc_term_in=" + TERM + "&CRN_IN=" + crn + "&"
 
-    # for i in range(len(CLASSES)):
-    #     s += "RSTS_IN=RW&CRN_IN="+CLASSES[i]+"&assoc_term_in=&start_date_in=&end_date_in=&UVM_REQ_WD_IND_IN=DUMMY&"
-    s += "RSTS_IN=RW&CRN_IN=10637&assoc_term_in=&start_date_in=&end_date_in=&UVM_REQ_WD_IND_IN=DUMMY&" #latin
-    s += "RSTS_IN=RW&CRN_IN=10385&assoc_term_in=&start_date_in=&end_date_in=&UVM_REQ_WD_IND_IN=DUMMY&" #bb
-    s += "RSTS_IN=RW&CRN_IN=10670&assoc_term_in=&start_date_in=&end_date_in=&UVM_REQ_WD_IND_IN=DUMMY&" #astr
+    # loop through adding new
+    for i in range(len(CLASSES)):
+        s += "RSTS_IN=RW&CRN_IN="+CLASSES[i]+"&assoc_term_in=&start_date_in=&end_date_in=&UVM_REQ_WD_IND_IN=DUMMY&"
 
+    # request tail
     s += "regs_row="+str(len(crns))+"&wait_row=0&add_row=10&REG_BTN=Submit+Changes"
 
     return s
@@ -106,7 +104,6 @@ def start_session(USERNAME, PASSWORD):
     with requests.session() as sess:
         login_result = aisuvm_login(sess, USERNAME, PASSWORD)
 
-        # TODO: un-hardcode term selection
         result = post(sess, constants.AIS_TERM_SELECTION_URL, {"term_in" : TERM},
                       {'referer': constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
         add_payload = make_add_payload(result)
@@ -117,11 +114,13 @@ def start_session(USERNAME, PASSWORD):
 def main():
     global USERNAME, PASSWORD, TERM, CLASSES
 
-    entries = read_file(LOGIN_TEXT)
+    # username/ pass
+    entries = read_file(constants.LOGIN_TEXT)
     USERNAME = entries[0]
     PASSWORD = entries[1]
 
-    entries = read_file(CLASSES_TEXT)
+    # term/ classes
+    entries = read_file(constants.CLASSES_TEXT)
     TERM = entries[0]
     CLASSES = entries[1:]
 
