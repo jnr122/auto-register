@@ -18,7 +18,6 @@ def read_file(url):
     entries = []
     try:
         file = open(url, "r")
-
         for line in file:
             entries.append(line.rstrip())
 
@@ -26,7 +25,7 @@ def read_file(url):
         return entries
 
     except:
-        print("Place username and password in adjacent login.txt file in format: username password")
+        print("Place data in adjacent login.txt or classes.txt")
         exit()
 
 
@@ -77,14 +76,17 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
     return result
 
 # scrape existing CRNS before passing in new ones
-def make_add_payload(result):
+def make_add_class_payload(result):
     s = "term_in=" + TERM + "&"
     s += constants.DUMMY
 
     # existing crns
     tree = html.fromstring(result.text)
     crns = list(set(tree.xpath("//input[@name='CRN_IN']/@value")))
-    crns.remove("DUMMY")
+    try:
+        crns.remove("DUMMY")
+    except:
+        pass
 
     # loop through adding existing
     for crn in crns:
@@ -106,7 +108,7 @@ def start_session(USERNAME, PASSWORD):
 
         result = post(sess, constants.AIS_TERM_SELECTION_URL, {"term_in" : TERM},
                       {'referer': constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
-        add_payload = make_add_payload(result)
+        add_payload = make_add_class_payload(result)
 
         result = post(sess, constants.ADD_URL, add_payload,
                       {'referer':  constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
