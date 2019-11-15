@@ -83,10 +83,8 @@ def make_add_class_payload(result):
     # existing crns
     tree = html.fromstring(result.text)
     crns = list(set(tree.xpath("//input[@name='CRN_IN']/@value")))
-    try:
+    if "DUMMY" in crns:
         crns.remove("DUMMY")
-    except:
-        pass
 
     # loop through adding existing
     for crn in crns:
