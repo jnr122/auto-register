@@ -13,3 +13,5 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36
 # info
 LOGIN_TEXT = "login.txt"
 CLASSES_TEXT = "classes.txt"
+# term info
+TERM = "202001"
