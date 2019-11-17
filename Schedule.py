@@ -1,3 +1,38 @@
+from Course import Course
+
 class Schedule:
-    def __init__(self):
-        self.classes = []
+    def __init__(self, to_add):
+        self.__to_add = to_add
+        self.__courses = []
+
+        for course in to_add:
+            self.add_class(course)
+
+    def add_class(self, new_course):
+        if len(self.__courses) == 0:
+            self.__courses.append(new_course)
+            return 1
+        else:
+            for course in self.__courses:
+                if course.conflicts_with(new_course):
+                    return -1
+            self.__courses.append(new_course)
+            return 1
+
+    def get_courses(self):
+        return self.__courses
+
+    def get_num_courses(self):
+        return len(self.__courses)
+
+def main():
+    cl1 = Course("1234","Course 1","04:25 pm-05:15 pm")
+    cl2 = Course("5678","Course 3","03:25 pm-04:24 pm")
+    cl3 = Course("5678","Course 3","10:00 am-03:26 pm")
+
+    sch = Schedule([cl1,cl2,cl3])
+
+    print(len(sch.get_courses()))
+
+
+main()
