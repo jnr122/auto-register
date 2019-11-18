@@ -4,7 +4,11 @@ class Course:
     def __init__(self, crn, title, time_range):
         self.crn = crn
         self.title = title
+        self.time_range = time_range
         self.start_mins, self.end_mins = self.parse_time_range(time_range)
+
+    def __str__(self):
+        return self.title + " " + self.time_range
 
     # convert time string to mins since midnight
     def time_to_mins(self, time):
@@ -25,13 +29,14 @@ class Course:
 
             # times containts the split start and end time
             for time in times:
-                if time.split(" ")[1] == "pm":
-                    hour = time.split(" ")[0].split(":")[0]
+                time_str = time.split(" ")
+                if time_str[1] == "pm":
+                    hour = time_str[0].split(":")[0]
                     (hour) = str(int(hour) + 12)
 
-                    time_mins.append(self.time_to_mins(hour + ":" + time.split(" ")[0].split(":")[1]))
+                    time_mins.append(self.time_to_mins(hour + ":" + time_str[0].split(":")[1]))
                 else:
-                    time_mins.append(self.time_to_mins(time.split(" ")[0]))
+                    time_mins.append(self.time_to_mins(time_str[0]))
 
             return int(time_mins[0]), int(time_mins[1])
         except:
