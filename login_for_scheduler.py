@@ -1,60 +1,15 @@
 import requests
 import constants
 from lxml import html
+from auto_login import read_file
+from auto_login import get
+from auto_login import post
+
 
 # user info
 USERNAME, PASSWORD = "NULL", "NULL"
 CLASSES = []
 TERM = ""
-
-def get(sess, url, headers):
-    return sess.get(url, headers=headers)
-
-def post(sess, url, payload, headers):
-    return sess.post(url, payload, headers=headers)
-
-# get data from textfile
-def read_file(url):
-    entries = []
-    try:
-        file = open(url, "r")
-
-        for line in file:
-            entries.append(line.rstrip())
-
-        file.close()
-        return entries
-
-    except:
-        print("Place username and password in adjacent login.txt file in format: username password")
-        exit()
-
-
-# perform login with hidden tokens for myuvm page
-# no longer necessary, but maybe useful later
-def myuvm_login(sess, USERNAME, PASSWORD):
-    result = get(sess, constants.MYUVM_LOGIN_URL, dict(referer=constants.MYUVM_LOGIN_URL))
-
-    # login attempt purely to scrape secret tokens
-    login_result = get(sess, constants.MYUVM_LOGIN_URL, dict(referer=constants.MYUVM_LOGIN_URL))
-
-    # parse secret tokens
-    str = (login_result.request.url.split("RT=")[1])
-    hidden_keys = str.split(";ST=")
-
-    # setup payload
-    login_payload = {
-        "RT": hidden_keys[0],
-        "ST": hidden_keys[1],
-        "login": "yes",
-        "username": USERNAME,
-        "password": PASSWORD
-    }
-
-    # actual login attempt
-    login_result = post(sess, login_result.request.url, login_payload, dict(referer=constants.MYUVM_LOGIN_URL))
-
-    return login_result
 
 
 def main():
@@ -71,10 +26,24 @@ def main():
     CLASSES = entries[1:]
 
     with requests.session() as schedule_session: #new session
-        login_results = myuvm_login(schedule_session,USERNAME, PASSWORD) # login at myUVM
-        #print(login_results.text)
-        add_class_results = get(schedule_session,constants.CLASS_SCHEDULE,{'referer' : constants.CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
-        print(add_class_results.text)
+        # login_results = aisuvm_login(schedule_session,USERNAME, PASSWORD) # login at myUVM
+        # # #print(login_results.text)
+        add_class_results = get(schedule_session,constants.LOGIN_CLASS_SCHEDULE,{'referer' : constants.LOGIN_CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
+
+        # setup payload
+        login_payload = {
+            "sid": USERNAME,
+            "PIN": PASSWORD
+        }
+
+        # update header dict with accepted submission format
+        # perform login, then get menu
+        result = post(schedule_session, constants.AIS_LOGIN_URL, login_payload,
+                      {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
+
+        add_class_results = get(schedule_session,constants.CLASS_SEARCH,{'referer' :"https://myuvm.uvm.edu/web/home-community/registrar?p_p_id=56_INSTANCE_UHUqm6dYpw1z&p_p_lifecycle=0&p_p_state=maximized&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=3&link_id=19", 'user-agent' : constants.USER_AGENT})
+        add_class_results = post(schedule_session,constants.CLASS_SCHEDULE,{"p_calling_proc":"P_CrseSearch","p_term":TERM},{'referer' : constants.CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
+        add_class_results = post(schedule_session,constants.ALL_COURSES_LINK,constants.POST_ALL_COURSES,{'referer' : constants.ALL_COURSES_LINK, 'user-agent' : constants.USER_AGENT})
 
 
 main()
