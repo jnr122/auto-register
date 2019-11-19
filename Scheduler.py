@@ -13,8 +13,8 @@ class Scheduler:
         self.max_list_courses = []
 
         self.generate_combinations()
-        print(str(self.max_list_courses[0]))
-
+        for sch in self.max_list_courses:
+            print(sch)
 
     # generate all combinations, chose to do iteratively instead of recursively
     def generate_combinations(self):
@@ -51,5 +51,6 @@ class Scheduler:
                 self.max_num_courses = num_courses
                 self.max_list_courses.append(sch)
             elif num_courses == self.max_num_courses:
-                self.max_list_courses.append(sch)
+                if sch not in self.max_list_courses:
+                    self.max_list_courses.append(sch)
 

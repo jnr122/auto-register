@@ -8,8 +8,20 @@ class Course:
         self.time_range = time_range
         self.start_mins, self.end_mins = self.parse_time_range(time_range)
 
+    # to string
     def __str__(self):
         return self.title + " " + self.time_range
+
+    # check for equality
+    def __eq__(self, other):
+        if self.crn == other.crn:
+            return True
+        return False
+
+    def __lt__(self, other):
+        if self.start_mins < other.start_mins:
+            return True
+        return False
 
     # convert time string to mins since midnight
     def time_to_mins(self, time):
@@ -33,7 +45,8 @@ class Course:
                 time_str = time.split(" ")
                 if time_str[1] == "pm":
                     hour = time_str[0].split(":")[0]
-                    hour = str(int(hour) + 12)
+                    if hour != "12":
+                        hour = str(int(hour) + 12)
 
                     time_mins.append(self.time_to_mins(hour + ":" + time_str[0].split(":")[1]))
                 else:
