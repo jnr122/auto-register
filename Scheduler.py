@@ -10,11 +10,9 @@ class Scheduler:
     def __init__(self, all_options):
         self.all_options = all_options
         self.max_num_courses = 0
-        self.max_list_courses = []
+        self.largest_schedules = []
 
         self.generate_combinations()
-        for sch in self.max_list_courses:
-            print(sch)
 
     # generate all combinations, chose to do iteratively instead of recursively
     def generate_combinations(self):
@@ -43,7 +41,6 @@ class Scheduler:
                 for n in range(len(self.all_options)):
                     combination.append(self.all_options[n][result[n]])
                 self.generate_permutations(combination)
-                print(result)
 
         else:
             # one class section for each course: unlikely
@@ -54,18 +51,13 @@ class Scheduler:
 
     # schedule all combinations of a given list of courses, adding unique max
     def generate_permutations(self, combination):
-        print("Num combinations: " + str(len(combination)))
-
         for p in list(permutations(combination)):
             sch = Schedule((p))
             num_courses = sch.get_num_courses()
             if num_courses > self.max_num_courses:
-                self.max_list_courses = []
+                self.largest_schedules = []
                 self.max_num_courses = num_courses
-                self.max_list_courses.append(sch)
+                self.largest_schedules.append(sch)
             elif num_courses == self.max_num_courses:
-                if sch not in self.max_list_courses:
-                    self.max_list_courses.append(sch)
-
-        print("Num Permutations: " + str(len(list(permutations(combination)))))
-        print()
+                if sch not in self.largest_schedules:
+                    self.largest_schedules.append(sch)
