@@ -15,3 +15,5 @@ LOGIN_TEXT = "login.txt"
 CLASSES_TEXT = "classes.txt"
 # term info
 TERM = "202001"
+# Url for the "Look for a class to add" site
+CLASS_SCHEDULE = "https://myuvm.uvm.edu/web/home-community/registrar?p_p_id=56_INSTANCE_UHUqm6dYpw1z&p_p_lifecycle=0&p_p_state=maximized&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=3&link_id=19"
