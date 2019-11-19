@@ -79,4 +79,6 @@ class Course:
                 elif self.start_mins <= other.end_mins <= self.end_mins:
                     return True
 
+                return False
+
         return False
