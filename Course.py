@@ -18,6 +18,7 @@ class Course:
             return True
         return False
 
+    # allow sorting
     def __lt__(self, other):
         if self.start_mins < other.start_mins:
             return True

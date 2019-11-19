@@ -42,6 +42,7 @@ class Scheduler:
                     combination.append(self.all_options[n][result[n]])
                 self.generate_permutations(combination)
 
+    # schedule all combinations of a given list of courses, adding unique max
     def generate_permutations(self, combination):
         for p in list(permutations(combination)):
             sch = Schedule((p))

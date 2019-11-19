@@ -1,5 +1,6 @@
 # Scheduler class for keeping track of successful class combinations
 class Schedule:
+    # constructor
     def __init__(self, to_add):
         self.__to_add = to_add
         self.__courses = []
