@@ -1,5 +1,5 @@
 # auto-register
-So I don't have to wake up to register for my classes, or scheduler
+So I don't have to wake up to register for my classes, or schedule them
 
 # Reqs
 1. Python3
