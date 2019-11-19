@@ -54,4 +54,3 @@ class Scheduler:
             elif num_courses == self.max_num_courses:
                 if sch not in self.max_list_courses:
                     self.max_list_courses.append(sch)
-

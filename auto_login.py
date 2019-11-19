@@ -8,10 +8,19 @@ CLASSES = []
 TERM = ""
 
 def get(sess, url, headers):
+    result = sess.get(url, headers=headers)
+
+    if result.status_code != 200:
+        print("Get response code: " + result.status_code)
+        exit(5)
     return sess.get(url, headers=headers)
 
 def post(sess, url, payload, headers):
-    return sess.post(url, payload, headers=headers)
+    result = sess.post(url, payload, headers=headers)
+    if result.status_code != 200:
+        print("Post response code: " + result.status_code)
+        exit(5)
+    return result
 
 # get data from textfile
 def read_file(url):
