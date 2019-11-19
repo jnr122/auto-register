@@ -2,15 +2,16 @@
 class Course:
 
     # constructor
-    def __init__(self, crn, title, time_range):
+    def __init__(self, crn, title, time_range, days):
         self.crn = crn
         self.title = title
         self.time_range = time_range
         self.start_mins, self.end_mins = self.parse_time_range(time_range)
+        self.days = days.split()
 
     # to string
     def __str__(self):
-        return self.title + " " + self.time_range
+        return self.title + " " + self.time_range + " " + str(self.days)
 
     # check for equality
     def __eq__(self, other):
@@ -60,20 +61,22 @@ class Course:
 
     # checks two Courses to see if there are any conflicts
     def conflicts_with(self, other):
-        # self start during other
-        if other.start_mins <= self.start_mins <= other.end_mins:
-            return True
+        for i in range(len(self.days)):
+            if self.days[i] in other.days:
+                # self start during other
+                if other.start_mins <= self.start_mins <= other.end_mins:
+                    return True
 
-        # self end during other
-        elif other.start_mins <= self.end_mins <= other.end_mins:
-            return True
+                # self end during other
+                elif other.start_mins <= self.end_mins <= other.end_mins:
+                    return True
 
-        # other start during self
-        elif self.start_mins <= other.start_mins <= self.end_mins:
-            return True
+                # other start during self
+                elif self.start_mins <= other.start_mins <= self.end_mins:
+                    return True
 
-        # other end during self
-        elif self.start_mins <= other.end_mins <= self.end_mins:
-            return True
+                # other end during self
+                elif self.start_mins <= other.end_mins <= self.end_mins:
+                    return True
 
         return False
