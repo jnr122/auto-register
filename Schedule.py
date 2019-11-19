@@ -1,5 +1,3 @@
-from Course import Course
-
 # Scheduler class for keeping track of successful class combinations
 class Schedule:
     def __init__(self, to_add):

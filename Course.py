@@ -1,3 +1,4 @@
+# Course class for keeping track of individual courses
 class Course:
 
     # constructor
@@ -32,7 +33,7 @@ class Course:
                 time_str = time.split(" ")
                 if time_str[1] == "pm":
                     hour = time_str[0].split(":")[0]
-                    (hour) = str(int(hour) + 12)
+                    hour = str(int(hour) + 12)
 
                     time_mins.append(self.time_to_mins(hour + ":" + time_str[0].split(":")[1]))
                 else:
