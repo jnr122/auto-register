@@ -9,18 +9,19 @@ TERM = ""
 
 def get(sess, url, headers):
     result = sess.get(url, headers=headers)
-
-    if result.status_code != 200:
+    if result:
+        return result
+    else:
         print("Get response code: " + result.status_code)
         exit(5)
-    return sess.get(url, headers=headers)
 
 def post(sess, url, payload, headers):
     result = sess.post(url, payload, headers=headers)
-    if result.status_code != 200:
+    if result:
+        return result
+    else:
         print("Post response code: " + result.status_code)
         exit(5)
-    return result
 
 # get data from textfile
 def read_file(url):
