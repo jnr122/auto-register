@@ -130,7 +130,7 @@ def main():
     PASSWORD = entries[1]
 
     # term/ classes
-    entries = read_file(constants.CLASSES_TEXT)
+    entries = read_file(constants.REGISTER_CLASSES_TEXT)
     TERM = entries[0]
     CLASSES = entries[1:]
 

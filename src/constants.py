@@ -12,4 +12,4 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36
 
 # info
 LOGIN_TEXT = "../../aux/login.txt"
-CLASSES_TEXT = "../../aux/classes.txt"
+REGISTER_CLASSES_TEXT = "../../aux/register_classes.txt"
