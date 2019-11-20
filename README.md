@@ -1,12 +1,12 @@
 # auto-register
-So I don't have to wake up to register for my classes
+So I don't have to wake up to register for my classes, or schedule them
 
 # Reqs
 1. Python3
 2. requests
 3. html/lxml
 
-# Usage
+# Usage - register
 1. Store username on first line and password on second line of an adjacent login.txt file
 2. Store registration term (e.g. 201909 for fall 2019 or 202001 for spring 2020) followed by all CRNs to add on their 
    own lines in adjacent classes.txt file

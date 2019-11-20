@@ -1,5 +1,5 @@
 import requests
-import constants
+from src import constants
 from lxml import html
 
 # user info
@@ -8,17 +8,26 @@ CLASSES = []
 TERM = ""
 
 def get(sess, url, headers):
-    return sess.get(url, headers=headers)
+    result = sess.get(url, headers=headers)
+    if result:
+        return result
+    else:
+        print("Get response code: " + result.status_code)
+        exit(5)
 
 def post(sess, url, payload, headers):
-    return sess.post(url, payload, headers=headers)
+    result = sess.post(url, payload, headers=headers)
+    if result:
+        return result
+    else:
+        print("Post response code: " + result.status_code)
+        exit(5)
 
 # get data from textfile
 def read_file(url):
     entries = []
     try:
         file = open(url, "r")
-
         for line in file:
             entries.append(line.rstrip())
 
@@ -26,7 +35,7 @@ def read_file(url):
         return entries
 
     except:
-        print("Place username and password in adjacent login.txt file in format: username password")
+        print("No data found in " + url)
         exit()
 
 
@@ -68,7 +77,7 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
     # update header dict with accepted submission format
     # perform login, then get menu
     result = post(sess, constants.AIS_LOGIN_URL, login_payload,
-                  {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT })
+                  {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
     result = post(sess, constants.AIS_LOGIN_URL, login_payload,
                   {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
     result = get(sess, constants.AIS_MENU_URL,
@@ -77,14 +86,15 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
     return result
 
 # scrape existing CRNS before passing in new ones
-def make_add_payload(result):
+def make_add_class_payload(result):
     s = "term_in=" + TERM + "&"
     s += constants.DUMMY
 
     # existing crns
     tree = html.fromstring(result.text)
     crns = list(set(tree.xpath("//input[@name='CRN_IN']/@value")))
-    crns.remove("DUMMY")
+    if "DUMMY" in crns:
+        crns.remove("DUMMY")
 
     # loop through adding existing
     for crn in crns:
@@ -106,7 +116,7 @@ def start_session(USERNAME, PASSWORD):
 
         result = post(sess, constants.AIS_TERM_SELECTION_URL, {"term_in" : TERM},
                       {'referer': constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
-        add_payload = make_add_payload(result)
+        add_payload = make_add_class_payload(result)
 
         result = post(sess, constants.ADD_URL, add_payload,
                       {'referer':  constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
@@ -120,7 +130,7 @@ def main():
     PASSWORD = entries[1]
 
     # term/ classes
-    entries = read_file(constants.CLASSES_TEXT)
+    entries = read_file(constants.REGISTER_CLASSES_TEXT)
     TERM = entries[0]
     CLASSES = entries[1:]
 
