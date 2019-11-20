@@ -1,9 +1,9 @@
-from src.scheduler.Course import Course
-from src.scheduler.Scheduler import Scheduler
+from Course import Course
+from Scheduler import Scheduler
 
 def main():
-    course1_options = [Course("1234","HCI","08:30 am-09:45 am", "TR"),Course("43151","Course 1","08:25 am-10:15 am", "MWF")]
-    course2_options = [Course("642452","Op Sys","09:40 am-010:30 am", "MWF")]
+    course1_options = [Course("1234","HCI","8:30 am-09:45 am", "TR"),Course("43151","Course 1","08:25 am-10:15 am", "MWF")]
+    course2_options = [Course("642452","Op Sys","09:40 am-010:30 am", "p3 ")]
     course3_options = [Course("254425","ANPS","12:00 pm-12:50 pm", "MWF"), Course("75363","Course 3","12:00 pm-01:16 pm","MWF"),
                        Course("2345277","Course 3","03:00 pm-03:26 pm", "TR")]
     course4_options = [Course("857858","Sof Eng","02:20 pm-03:10 pm", "MWF"), Course("567594","Course 4","9:00 am-10:16 pm", "TR"),

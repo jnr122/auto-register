@@ -1,7 +1,7 @@
 from functools import reduce
 from operator import mul
 from itertools import permutations
-from src.scheduler.Schedule import Schedule
+from Schedule import Schedule
 
 # Scheduler class generating and attempting to combine course permutations
 class Scheduler:
@@ -17,13 +17,12 @@ class Scheduler:
 
     # generate all combinations, chose to do iteratively instead of recursively
     def generate_combinations(self):
-        # store ranges to iterate over
+        # store ranges to iterate over, and initialize indices
         ranges = [len(option) for option in self.all_options]
+        indices = [0 for _ in ranges]
 
         # calculate total number of iterations
         ops = reduce(mul, ranges) - 1
-        print(ops)
-        indices = [0 for _ in ranges]
         pos = len(ranges) - 1
         incr = 0
         if ops > 0:

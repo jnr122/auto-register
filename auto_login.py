@@ -1,5 +1,5 @@
 import requests
-from src import constants
+import constants
 from lxml import html
 
 # user info
