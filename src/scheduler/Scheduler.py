@@ -18,36 +18,30 @@ class Scheduler:
     # generate all combinations, chose to do iteratively instead of recursively
     def generate_combinations(self):
         # store ranges to iterate over
-        ranges = []
-
-        for i in range(len(self.all_options)):
-            ranges.append([0, len(self.all_options[i])])
+        ranges = [len(option) for option in self.all_options]
 
         # calculate total number of iterations
-        operations = reduce(mul, (p[1] - p[0] for p in ranges)) - 1
-
-        result = [i[0] for i in ranges]
+        ops = reduce(mul, ranges) - 1
+        print(ops)
+        indices = [0 for _ in ranges]
         pos = len(ranges) - 1
-        increments = 0
-        if operations > 0:
-            while increments < operations:
-                combination = []
-                if result[pos] == ranges[pos][1] - 1:
-                    result[pos] = ranges[pos][0]
+        incr = 0
+        if ops > 0:
+            while incr < ops:
+                if indices[pos] == ranges[pos] - 1:
+                    indices[pos] = 0
                     pos -= 1
                 else:
-                    result[pos] += 1
-                    increments += 1
-                    pos = len(ranges) - 1  # increment the innermost loop
-                for n in range(len(self.all_options)):
-                    combination.append(self.all_options[n][result[n]])
+                    indices[pos] += 1
+                    incr += 1
+                    pos = len(ranges) - 1
+
+                combination = [option[indices[self.all_options.index(option)]] for option in self.all_options]
                 self.generate_permutations(combination)
 
         else:
             # one class section for each course: unlikely
-            combination = []
-            for option in self.all_options:
-                combination.append(option[0])
+            combination = [option[0] for option in self.all_options]
             self.generate_permutations(combination)
 
     # schedule all combinations of a given list of courses, adding unique max
