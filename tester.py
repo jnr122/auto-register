@@ -14,5 +14,6 @@ def main():
 
     schr = Scheduler(all_options)
 
+    print(*schr.largest_schedules, sep="\n")
 
 main()

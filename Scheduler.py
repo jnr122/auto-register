@@ -14,6 +14,8 @@ class Scheduler:
 
         self.generate_combinations()
 
+        self.largest_schedules.sort()
+
     # generate all combinations, chose to do iteratively instead of recursively
     def generate_combinations(self):
         # store ranges to iterate over

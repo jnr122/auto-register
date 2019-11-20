@@ -10,6 +10,20 @@ class Schedule:
 
         self.courses.sort()
 
+    # compare courses, currently supports compare by start time, will support other comparisons
+    def __lt__(self, other):
+        return self.get_earliest_start(self.courses) > other.get_earliest_start(other.courses)
+
+    # return the earliest course start time in a list of courses
+    def get_earliest_start(self, courses):
+        earliest = courses[0].start_mins
+
+        for i in range(1,len(courses)):
+            if courses[i].start_mins < earliest:
+                earliest = courses[i].start_mins
+        return earliest
+
+
     # tostring
     def __str__(self):
         s = "num courses: " + str(len(self.courses)) + "\n"
