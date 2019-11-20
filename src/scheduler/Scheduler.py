@@ -1,7 +1,7 @@
 from functools import reduce
 from operator import mul
 from itertools import permutations
-from Schedule import Schedule
+from src.scheduler.Schedule import Schedule
 
 # Scheduler class generating and attempting to combine course permutations
 class Scheduler:

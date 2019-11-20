@@ -1,5 +1,5 @@
-from Course import Course
-from Scheduler import Scheduler
+from src.scheduler.Course import Course
+from src.scheduler.Scheduler import Scheduler
 
 def main():
     course1_options = [Course("1234","HCI","08:30 am-09:45 am", "TR"),Course("43151","Course 1","08:25 am-10:15 am", "MWF")]

@@ -1,5 +1,5 @@
 import requests
-import constants
+from src import constants
 from lxml import html
 
 # user info
@@ -35,7 +35,7 @@ def read_file(url):
         return entries
 
     except:
-        print("Place data in adjacent login.txt or classes.txt")
+        print("No data found in " + url)
         exit()
 
 
@@ -77,7 +77,7 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
     # update header dict with accepted submission format
     # perform login, then get menu
     result = post(sess, constants.AIS_LOGIN_URL, login_payload,
-                  {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT })
+                  {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
     result = post(sess, constants.AIS_LOGIN_URL, login_payload,
                   {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
     result = get(sess, constants.AIS_MENU_URL,
