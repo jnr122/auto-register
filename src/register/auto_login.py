@@ -12,7 +12,7 @@ def get(sess, url, headers):
     if result:
         return result
     else:
-        print("Get response code: " + result.status_code)
+        print("Get response code: " + str(result.status_code))
         exit(5)
 
 def post(sess, url, payload, headers):
@@ -20,7 +20,7 @@ def post(sess, url, payload, headers):
     if result:
         return result
     else:
-        print("Post response code: " + result.status_code)
+        print("Post response code: " + str(result.status_code))
         exit(5)
 
 # get data from textfile

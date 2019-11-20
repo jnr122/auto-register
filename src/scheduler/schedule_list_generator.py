@@ -1,7 +1,7 @@
 import re
 
 # open the text file with the raw schedule into variable raw_data
-with open("schedule_page.txt","r") as file:
+with open("aux/schedule_page.txt","r") as file:
     raw_data = file.read()
 
 rows = re.split("\n",raw_data)
@@ -31,7 +31,7 @@ for i in range(len(all_classes)):
         all_classes_clean[i][j] = re.sub('<.*?>', '',all_classes[i][j])
 
 
-with open('classes.txt', 'w') as f:
+with open('aux/classes.txt', 'w') as f:
     for item in all_classes_clean:
         f.write("%s\n" % item)
 

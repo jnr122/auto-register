@@ -1,9 +1,7 @@
 import requests
-import constants
+from src import constants
 from lxml import html
-from auto_login import read_file
-from auto_login import get
-from auto_login import post
+from src.register.auto_login import read_file, get, post
 
 
 # user info
@@ -11,19 +9,13 @@ USERNAME, PASSWORD = "NULL", "NULL"
 CLASSES = []
 TERM = ""
 
-
 def main():
     global USERNAME, PASSWORD, TERM, CLASSES
 
     # username/ pass
-    entries = read_file(constants.LOGIN_TEXT)
+    entries = read_file("aux/login.txt")
     USERNAME = entries[0]
     PASSWORD = entries[1]
-
-    # term/ classes
-    entries = read_file(constants.CLASSES_TEXT)
-    TERM = entries[0]
-    CLASSES = entries[1:]
 
     with requests.session() as schedule_session: #new session
         # login_results = aisuvm_login(schedule_session,USERNAME, PASSWORD) # login at myUVM
@@ -44,7 +36,7 @@ def main():
         get(schedule_session,constants.CLASS_SEARCH,{'referer' :constants.ADD_CLASS_REFERER, 'user-agent' : constants.USER_AGENT})
         post(schedule_session,constants.CLASS_SCHEDULE,{"p_calling_proc":"P_CrseSearch","p_term":TERM},{'referer' : constants.CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
         classes = post(schedule_session,constants.ALL_COURSES_LINK,constants.POST_ALL_COURSES,{'referer' : constants.ALL_COURSES_LINK, 'user-agent' : constants.USER_AGENT})
-        classes_file = open("schedule_page.txt","w")
+        classes_file = open("aux/schedule_page.txt","w")
         classes_file.write(classes.text)
 
 main()
