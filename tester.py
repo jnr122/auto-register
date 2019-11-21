@@ -54,7 +54,7 @@ def get_courses_from_text(crns):
         print(len(options))
 
     schr = Scheduler(all_options)
-    # print(*schr.largest_schedules, sep="\n")
+    print(*schr.largest_schedules, sep="\n")
 
 
 

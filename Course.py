@@ -41,9 +41,9 @@ class Course:
             return True
         return False
 
-    # allow sorting
+    # allow sorting by end time for greedy algorithm
     def __lt__(self, other):
-        if self.start_mins < other.start_mins:
+        if self.end_mins < other.end_mins:
             return True
         return False
 

@@ -48,13 +48,12 @@ class Scheduler:
 
     # schedule all combinations of a given list of courses, adding unique max
     def generate_permutations(self, combination):
-        for p in list(permutations(combination)):
-            sch = Schedule((p))
-            num_courses = sch.get_num_courses()
-            if num_courses > self.max_num_courses:
-                self.largest_schedules = []
-                self.max_num_courses = num_courses
+        sch = Schedule(combination)
+        num_courses = sch.get_num_courses()
+        if num_courses > self.max_num_courses:
+            self.largest_schedules = []
+            self.max_num_courses = num_courses
+            self.largest_schedules.append(sch)
+        elif num_courses == self.max_num_courses:
+            if sch not in self.largest_schedules:
                 self.largest_schedules.append(sch)
-            elif num_courses == self.max_num_courses:
-                if sch not in self.largest_schedules:
-                    self.largest_schedules.append(sch)
