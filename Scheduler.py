@@ -2,6 +2,7 @@ from functools import reduce
 from operator import mul
 from itertools import permutations
 from Schedule import Schedule
+import time
 
 # Scheduler class generating and attempting to combine course permutations
 class Scheduler:
@@ -12,8 +13,10 @@ class Scheduler:
         self.max_num_courses = 0
         self.largest_schedules = []
 
+        start = time.time()
         self.generate_combinations()
         self.largest_schedules.sort()
+        print(time.time() - start)
 
     # generate all combinations, chose to do iteratively instead of recursively
     def generate_combinations(self):

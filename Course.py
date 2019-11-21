@@ -2,12 +2,34 @@
 class Course:
 
     # constructor
-    def __init__(self, crn, title, time_range, days):
-        self.crn = crn
-        self.title = title
-        self.time_range = time_range
-        self.start_mins, self.end_mins = self.parse_time_range(time_range)
-        self.days = days.split()
+    def __init__(self, course_list):
+
+        #TODO account for time is TBA
+        self.crn = course_list[0]
+        self.subj = course_list[1]
+        self.crse = course_list[2]
+        self.sec = course_list[3]
+        self.cmp = course_list[4]
+        self.cred = course_list[5]
+        self.title = course_list[6]
+        self.days = course_list[7].split()
+        self.time_range = course_list[8]
+        self.start_mins, self.end_mins = self.parse_time_range(self.time_range)
+        self.cap = course_list[9]
+        self.act = course_list[10]
+        self.rem = course_list[11]
+        self.XLcap = course_list[12]
+        self.XLact = course_list[13]
+        self.XLrem = course_list[14]
+        self.instr = course_list[15]
+        self.date = course_list[16]
+        self.loc = course_list[17]
+
+        if len(course_list) > 18:
+            if course_list[18] == "C":
+                self.full = True
+            else:
+                self.full = False
 
     # to string
     def __str__(self):

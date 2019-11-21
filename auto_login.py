@@ -66,7 +66,7 @@ def myuvm_login(sess, USERNAME, PASSWORD):
     return login_result
 
 # skip directly to aisuvm iframe
-def aisuvm_login(sess, USERNAME, PASSWORD):
+def aisuvm_login(sess, USERNAME, PASSWORD, url):
 
     # setup payload
     login_payload = {
@@ -76,12 +76,10 @@ def aisuvm_login(sess, USERNAME, PASSWORD):
 
     # update header dict with accepted submission format
     # perform login, then get menu
-    result = post(sess, constants.AIS_LOGIN_URL, login_payload,
-                  {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
-    result = post(sess, constants.AIS_LOGIN_URL, login_payload,
-                  {'referer': constants.AIS_LOGIN_URL, 'user-agent': constants.USER_AGENT})
-    result = get(sess, constants.AIS_MENU_URL,
-                 {'referer' : constants.AIS_MENU_URL, 'user-agent' : constants.USER_AGENT})
+    result = post(sess, url, login_payload,
+                  {'referer': url, 'user-agent': constants.USER_AGENT})
+    result = post(sess, url, login_payload,
+                  {'referer': url, 'user-agent': constants.USER_AGENT})
 
     return result
 
@@ -110,9 +108,12 @@ def make_add_class_payload(result):
     return s
 
 # set up get request
-def start_session(USERNAME, PASSWORD):
+def add_classes(USERNAME, PASSWORD):
     with requests.session() as sess:
-        login_result = aisuvm_login(sess, USERNAME, PASSWORD)
+        login_result = aisuvm_login(sess, USERNAME, PASSWORD, constants.AIS_LOGIN_URL)
+
+        result = get(sess, constants.AIS_MENU_URL,
+                     {'referer': constants.AIS_MENU_URL, 'user-agent': constants.USER_AGENT})
 
         result = post(sess, constants.AIS_TERM_SELECTION_URL, {"term_in" : TERM},
                       {'referer': constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
@@ -134,7 +135,7 @@ def main():
     TERM = entries[0]
     CLASSES = entries[1:]
 
-    start_session(USERNAME, PASSWORD)
+    add_classes(USERNAME, PASSWORD)
 
 if __name__ == '__main__':
     main()
