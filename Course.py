@@ -12,7 +12,7 @@ class Course:
         self.cmp = course_list[4]
         self.cred = course_list[5]
         self.title = course_list[6]
-        self.days = course_list[7].split()
+        self.days = list(course_list[7])
         self.time_range = course_list[8]
         self.start_mins, self.end_mins = self.parse_time_range(self.time_range)
         self.cap = course_list[9]
@@ -33,7 +33,7 @@ class Course:
 
     # to string
     def __str__(self):
-        return self.title + " " + self.time_range + " " + str(self.days)
+        return self.crn + " " + self.title + " " + self.time_range + " " + str(self.days)
 
     # check for equality
     def __eq__(self, other):
@@ -83,24 +83,30 @@ class Course:
 
     # checks two Courses to see if there are any conflicts
     def conflicts_with(self, other):
-        for i in range(len(self.days)):
-            if self.days[i] in other.days:
-                # self start during other
-                if other.start_mins <= self.start_mins <= other.end_mins:
-                    return True
+        if self.same_day_as(other):
+            # self start during other
+            if other.start_mins <= self.start_mins <= other.end_mins:
+                return True
 
-                # self end during other
-                elif other.start_mins <= self.end_mins <= other.end_mins:
-                    return True
+            # self end during other
+            elif other.start_mins <= self.end_mins <= other.end_mins:
+                return True
 
-                # other start during self
-                elif self.start_mins <= other.start_mins <= self.end_mins:
-                    return True
+            # other start during self
+            elif self.start_mins <= other.start_mins <= self.end_mins:
+                return True
 
-                # other end during self
-                elif self.start_mins <= other.end_mins <= self.end_mins:
-                    return True
+            # other end during self
+            elif self.start_mins <= other.end_mins <= self.end_mins:
+                return True
 
-                return False
+            return False
 
         return False
+
+    def same_day_as(self, other):
+        for i in range(len(self.days)):
+            if self.days[i] in other.days:
+                return True
+        return False
+

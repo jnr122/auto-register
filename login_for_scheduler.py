@@ -7,29 +7,29 @@ from auto_login import read_file, get, post, aisuvm_login
 USERNAME, PASSWORD = "NULL", "NULL"
 CLASSES = []
 TERM = ""
-
-def main():
-    global USERNAME, PASSWORD, TERM, CLASSES
-
-    # username/ pass
-    entries = read_file(constants.LOGIN_TEXT)
-    USERNAME = entries[0]
-    PASSWORD = entries[1]
-
-    with requests.session() as sess: #new session
-
-        get(sess, constants.LOGIN_CLASS_SCHEDULE, {'referer' : constants.LOGIN_CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
-
-        aisuvm_login(sess, USERNAME, PASSWORD, constants.AIS_LOGIN_URL)
-
-        get(sess, constants.CLASS_SEARCH, {'referer' : constants.ADD_CLASS_REFERER, 'user-agent' : constants.USER_AGENT})
-        post(sess, constants.CLASS_SCHEDULE, {"p_calling_proc": "P_CrseSearch", "p_term":TERM}, {'referer' : constants.CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
-        classes = post(sess, constants.ALL_COURSES_LINK, constants.POST_ALL_COURSES, {'referer' : constants.ALL_COURSES_LINK, 'user-agent' : constants.USER_AGENT})
-
-    classes_file = open("aux/schedule_page.txt","w")
-    classes_file.write(classes.text)
-
-    clean()
+#
+# def main():
+#     global USERNAME, PASSWORD, TERM, CLASSES
+#
+#     # username/ pass
+#     entries = read_file(constants.LOGIN_TEXT)
+#     USERNAME = entries[0]
+#     PASSWORD = entries[1]
+#
+#     with requests.session() as sess: #new session
+#
+#         get(sess, constants.LOGIN_CLASS_SCHEDULE, {'referer' : constants.LOGIN_CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
+#
+#         aisuvm_login(sess, USERNAME, PASSWORD, constants.AIS_LOGIN_URL)
+#
+#         get(sess, constants.CLASS_SEARCH, {'referer' : constants.ADD_CLASS_REFERER, 'user-agent' : constants.USER_AGENT})
+#         post(sess, constants.CLASS_SCHEDULE, {"p_calling_proc": "P_CrseSearch", "p_term":TERM}, {'referer' : constants.CLASS_SCHEDULE, 'user-agent' : constants.USER_AGENT})
+#         classes = post(sess, constants.ALL_COURSES_LINK, constants.POST_ALL_COURSES, {'referer' : constants.ALL_COURSES_LINK, 'user-agent' : constants.USER_AGENT})
+#
+#     classes_file = open("aux/schedule_page.txt","w")
+#     classes_file.write(classes.text)
+#
+#     clean()
 
 def clean():
 
@@ -70,6 +70,6 @@ def clean():
 
 
 
-main()
+# main()
 
 

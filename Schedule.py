@@ -5,6 +5,24 @@ class Schedule:
         self.__to_add = to_add
         self.courses = []
 
+        ''' never trying full working set'''
+        crns = []
+        for toadd in self.__to_add:
+            crns.append(toadd.crn)
+        crnsss = ["10435", "11181", "11203", "14854", "10385", "10637", "10461", "12950", "10649", "10439"]
+        full = True
+        for c in crnsss:
+            if c in crnsss:
+                if c not in crns:
+                    full = False
+        if full == True:
+            print("vtrue")
+
+
+        if set(crnsss) == set(crns):
+            print("samesees")
+
+
         for course in to_add:
             self.add_class(course)
 
@@ -33,11 +51,13 @@ class Schedule:
         return s
 
     # check for equality
+    # TODO fix this, start by adding everything, figure out why duplicates still occur
     def __eq__(self, other):
         if self.get_num_courses() != other.get_num_courses():
             return False
+
         for i in range(self.get_num_courses()):
-            if self.courses[i] != other.get_courses()[i]:
+            if self.courses[i] not in other.get_courses():
                 return False
         return True
 
