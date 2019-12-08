@@ -15,7 +15,6 @@ class Scheduler:
         self.all_options = self.get_courses_from_text(crns)
         self.max_num_courses = 0
         self.largest_schedules = []
-        inds = [0,0,0,0,0,0,0,0,4,3]
 
         start = time.time()
         self.generate_combinations()
@@ -49,18 +48,13 @@ class Scheduler:
                     incr += 1
                     pos = len(ranges) - 1
 
-                print(indices)
-                if indices == [0,0,0,0,0,0,0,0,4,3]:
-                    print("ap")
-
-
-                # combination = [option[indices[self.all_options.index(option)]] for option in self.all_options]
                 combination = []
                 for i in range(len(indices)):
                     combination.append(self.all_options[i][indices[i]])
 
                 self.schedule_combination(combination)
                 # self.generate_permutations(combination)
+
 
         else:
             # one class section for each course: unlikely
@@ -108,18 +102,17 @@ class Scheduler:
             # self.largest_schedules.append(sch)
             self.add_schedule(sch)
 
-    # # for testing against greedy algorithm modifications
-    # def generate_permutations(self, combination):
-    #     for p in list(permutations(combination)):
-    #         sch = Schedule((p))
-    #         num_courses = sch.get_num_courses()
-    #         if num_courses > self.max_num_courses:
-    #             self.largest_schedules = []
-    #             self.max_num_courses = num_courses
-    #             self.add_schedule(sch)
-    #         elif num_courses == self.max_num_courses:
-    #             if sch not in self.largest_schedules:
-    #                 self.add_schedule(sch)
+    # for testing against greedy algorithm modifications
+    def generate_permutations(self, combination):
+        for p in list(permutations(combination)):
+            sch = Schedule((p))
+            num_courses = sch.get_num_courses()
+            if num_courses > self.max_num_courses:
+                self.largest_schedules = []
+                self.max_num_courses = num_courses
+                self.add_schedule(sch)
+            elif num_courses == self.max_num_courses:
+                self.add_schedule(sch)
 
     # this isnt working
     def add_schedule(self, sch):

@@ -5,23 +5,6 @@ class Schedule:
         self.__to_add = to_add
         self.courses = []
 
-        ''' never trying full working set'''
-        crns = []
-        for toadd in self.__to_add:
-            crns.append(toadd.crn)
-        crnsss = ["10435", "11181", "11203", "14854", "10385", "10637", "10461", "12950", "10649", "10439"]
-        full = True
-        for c in crnsss:
-            if c in crnsss:
-                if c not in crns:
-                    full = False
-        if full == True:
-            print("vtrue")
-
-
-        if set(crnsss) == set(crns):
-            print("samesees")
-
 
         for course in to_add:
             self.add_class(course)
