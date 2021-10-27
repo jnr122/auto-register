@@ -1,6 +1,0 @@
-PassengerAppType wsgi
-PassengerStartupFile wsgi.py
-PassengerAppRoot /users/j/r/jrubin8/www-root/
-PassengerPython /usr/local/bin/python36 
-
-PassengerFriendlyErrorPages On

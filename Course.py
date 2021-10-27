@@ -110,3 +110,6 @@ class Course:
                 return True
         return False
 
+    def is_lab(self):
+        return self.cred == 0
+

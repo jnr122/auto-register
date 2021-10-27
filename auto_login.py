@@ -119,7 +119,7 @@ def add_classes(USERNAME, PASSWORD):
                       {'referer': constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
         add_payload = make_add_class_payload(result)
 
-        result = post(sess, constants.ADD_URL, add_payload,
+        result = post(sess, constants.AIS_TERM_SELECTION_URL, add_payload,
                       {'referer':  constants.AIS_TERM_SELECTION_URL, 'user-agent':  constants.USER_AGENT})
 
 def main():

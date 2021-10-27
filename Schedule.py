@@ -2,14 +2,16 @@
 class Schedule:
     # constructor
     def __init__(self, to_add):
-        self.__to_add = to_add
+        self.to_add = to_add
         self.courses = []
 
+        self.to_add.sort()
 
         for course in to_add:
             self.add_class(course)
 
-        self.courses.sort()
+        for course in self.courses:
+            self.delete_orphans(course)
 
     # compare courses, currently supports compare by start time, will support other comparisons
     def __lt__(self, other):
@@ -55,6 +57,12 @@ class Schedule:
                     return -1
             self.courses.append(new_course)
             return 1
+
+    # get rid of schedules that have labs without parent lectures or lectures without child labs
+    def delete_orphans(self, course):
+        for i in range(len(self.courses)):
+            if course != self.courses[i] and course.crse == self.courses[i].crse:
+                print(course.sec)
 
     # getters
     def get_courses(self):

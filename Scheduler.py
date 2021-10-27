@@ -12,14 +12,18 @@ class Scheduler:
     # constructor
     def __init__(self, crns):
 
-        self.all_options = self.get_courses_from_text(crns)
-        self.max_num_courses = 0
-        self.largest_schedules = []
+        if len(crns) <= 10:
+            self.all_options = self.get_courses_from_text(crns)
+            self.max_num_courses = 0
+            self.largest_schedules = []
 
-        start = time.time()
-        self.generate_combinations()
-        self.largest_schedules.sort()
-        print(time.time() - start)
+            start = time.time()
+            self.generate_combinations()
+            self.largest_schedules.sort()
+            print(time.time() - start)
+
+        else:
+            print("Can only submit <11 crns at a time")
 
     # tostring
     def __str__(self):
